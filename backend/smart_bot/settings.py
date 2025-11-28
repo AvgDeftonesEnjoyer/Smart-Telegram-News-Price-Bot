@@ -136,5 +136,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Telegram Bot Settings
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+COINGECKO_TRENDING_URL= os.getenv('COINGECKO_TRENDING_URL')
+
+# Redis Settings
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+REDIS_DB = int(os.getenv('REDIS_DB', 0))
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
 
 AUTH_USER_MODEL = 'users.CustomUser'
