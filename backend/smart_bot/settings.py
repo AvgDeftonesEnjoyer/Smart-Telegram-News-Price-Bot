@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'users',
+    'subscriptions',
 ]
 
 MIDDLEWARE = [
@@ -85,8 +86,8 @@ DATABASES = {
         'ENGINE' : 'django.db.backends.postgresql',
         'NAME' : 'smartbot_db',
         'USER' : 'postgres',
-        'PASSWORD' : 'postgres',
-        'HOST' : 'localhost',
+        'PASSWORD' : 'password',
+        'HOST' : 'db',
         'PORT' : '5432',
     }
 }
@@ -135,3 +136,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Telegram Bot Settings
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+
+AUTH_USER_MODEL = 'users.CustomUser'

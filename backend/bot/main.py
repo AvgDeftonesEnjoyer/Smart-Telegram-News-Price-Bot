@@ -14,8 +14,9 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smart_bot.settings')
 django.setup()
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hello! I'm your Smart Bot.")
+# Import handlers AFTER django.setup() because they use Django models
+from bot.handlers import subscribe, unsubscribe, start
+
 
 def main():
     TOKEN = settings.BOT_TOKEN
@@ -25,6 +26,8 @@ def main():
     
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler('start', start))
+    app.add_handler(CommandHandler('subscribe', subscribe))
+    app.add_handler(CommandHandler('unsubscribe', unsubscribe))
 
     print("Bot started. Polling...")
     app.run_polling()
