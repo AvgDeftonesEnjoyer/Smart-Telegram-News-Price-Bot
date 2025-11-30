@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'subscriptions',
+    'topics',
 ]
 
 MIDDLEWARE = [

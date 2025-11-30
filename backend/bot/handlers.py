@@ -9,7 +9,20 @@ from news_providers.crypto import get_crypto_trending
 
 #Response on command /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hello! I'm your Smart Bot.")
+    telegram_id = update.effective_user.id
+    username = update.effective_user.username
+    
+    user, created = await sync_to_async(CustomUser.objects.get_or_create)(
+        telegram_id=telegram_id,
+        defaults={
+            'username': username
+        }
+    )
+
+    if created:
+        await update.message.reply_text("Welcome to Smart Bot! You have been successfully registered.")
+    else:
+        await update.message.reply_text("Welcome back to Smart Bot!")
 
 #Response on command /subscribe
 async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
