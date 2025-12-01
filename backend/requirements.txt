@@ -5,3 +5,5 @@ python-telegram-bot==21.10
 python-dotenv==1.0.1
 redis==5.0.1
 requests==2.31.0
+celery==5.3.4
+django-celery-beat==2.5.0

@@ -77,6 +77,56 @@ services:
     volumes:
       - redis_data:/data
 
+  celery_worker:
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile
+    container_name: smartbot_celery_worker
+    restart: always
+    env_file:
+      - ../.env
+    environment:
+      - DB_HOST=db
+      - DB_NAME=smartbot_db
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ../backend:/app
+    command: celery -A smart_bot worker --loglevel=info
+
+  celery_beat:
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile
+    container_name: smartbot_celery_beat
+    restart: always
+    env_file:
+      - ../.env
+    environment:
+      - DB_HOST=db
+      - DB_NAME=smartbot_db
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ../backend:/app
+    command: celery -A smart_bot beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
 volumes:
   postgres_data:
   redis_data:

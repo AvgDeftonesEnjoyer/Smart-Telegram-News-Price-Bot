@@ -10,7 +10,8 @@ def get_crypto_trending():
     
     cached = r.get(CACHE_KEY)
     if cached:
-        print(f"Cached data found for {CACHE_KEY}")
+        cached.cached.decode('utf-8')
+        print(f"Using cached data for {CACHE_KEY}")
         return cached.split('\n\n')
     
     try:
