@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -120,6 +122,17 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
+
+CELERY_BEAT_SCHEDULE = {
+    'fetch-crypto-every-30-minutes': {
+        'task' : 'topics.tasks.fetch_crypto_news_task',
+        'schedule' : 60*30, # every 30 minutes
+    },
+    'send-updates-every-hour' : {
+        'task': 'topics.tasks.send_topic_updates_task',
+        'schedule' : 60*60, # every hour
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
