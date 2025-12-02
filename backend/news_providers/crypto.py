@@ -10,9 +10,9 @@ def get_crypto_trending():
     
     cached = r.get(CACHE_KEY)
     if cached:
-        cached.cached.decode('utf-8')
+        cached_str = cached.decode('utf-8')
         print(f"Using cached data for {CACHE_KEY}")
-        return cached.split('\n\n')
+        return cached_str.split('\n\n')
     
     try:
         response = requests.get(COINGECKO_TRENDING_URL, timeout=10)
@@ -40,5 +40,7 @@ def get_crypto_trending():
         return results
     
     except Exception as e:
-        return f"Error fetching crypto trending: {e}"
+        error_msg = f"Error fetching crypto trending: {e}"
+        print(error_msg)
+        return [error_msg]  # Return as list to match expected format
             

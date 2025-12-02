@@ -11,6 +11,7 @@ class Topic(models.Model):
 class FeedItem(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='feed_items')
     title = models.CharField(max_length=255)
+    content = models.TextField(blank=True, null=True)  # Optional detailed content
     url = models.URLField()
     source = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)

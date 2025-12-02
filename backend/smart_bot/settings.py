@@ -126,11 +126,11 @@ CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_BEAT_SCHEDULE = {
     'fetch-crypto-every-30-minutes': {
         'task' : 'topics.tasks.fetch_crypto_news_task',
-        'schedule' : 60*30, # every 30 minutes
+        'schedule' : 60, # every 30 minutes
     },
     'send-updates-every-hour' : {
         'task': 'topics.tasks.send_topic_updates_task',
-        'schedule' : 60*60, # every hour
+        'schedule' : 60*2, # every hour
     }
 }
 
@@ -158,7 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Telegram Bot Settings
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-COINGECKO_TRENDING_URL= os.getenv('COINGECKO_TRENDING_URL')
+COINGECKO_TRENDING_URL = os.getenv('COINGECKO_TRENDING_URL', 'https://api.coingecko.com/api/v3/search/trending')
 
 # Redis Settings
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
