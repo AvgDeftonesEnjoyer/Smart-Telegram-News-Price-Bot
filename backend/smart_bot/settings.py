@@ -125,12 +125,12 @@ CELERY_TIMEZONE = 'Europe/Kiev'
 
 CELERY_BEAT_SCHEDULE = {
     'fetch-crypto-every-30-minutes': {
-        'task' : 'topics.tasks.fetch_crypto_news_task',
-        'schedule' : 60, # every 30 minutes
+        'task': 'topics.tasks.fetch_crypto_news_task',
+        'schedule': 60 * 30,  # every 30 minutes (1800 seconds)
     },
-    'send-updates-every-hour' : {
+    'send-updates-every-hour': {
         'task': 'topics.tasks.send_topic_updates_task',
-        'schedule' : 60*2, # every hour
+        'schedule': 60 * 60,  # every hour (3600 seconds)
     }
 }
 
@@ -165,5 +165,52 @@ REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
 REDIS_DB = int(os.getenv('REDIS_DB', 0))
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'smartbot.log',
+            'maxBytes': 1024 * 1024 * 10,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+        'bot': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+        'topics': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+        'news_providers': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+    },
+}
 
 AUTH_USER_MODEL = 'users.CustomUser'
