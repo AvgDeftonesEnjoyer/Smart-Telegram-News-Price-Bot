@@ -8,6 +8,8 @@ from subscriptions.models import Subscription
 from topics.models import Topic
 from bot.default_topics import DEFAULT_TOPICS
 from news_providers.crypto import get_crypto_trending
+from news_providers.stocks import get_stocks_trending
+from news_providers.news import get_news_trending
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -31,7 +33,7 @@ async def get_user(telegram_id, username):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         telegram_id = update.effective_user.id
-        username = update.effective_user.username
+        username = update.effective_user.username or f'user_{telegram_id}'
         
         user, created = await get_user(telegram_id, username)
 
@@ -49,7 +51,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         telegram_id = update.effective_user.id
-        username = update.effective_user.username
+        username = update.effective_user.username or f'user_{telegram_id}'
 
         user, created = await get_user(telegram_id, username)
 
@@ -85,7 +87,7 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def unsubscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         telegram_id = update.effective_user.id
-        username = update.effective_user.username
+        username = update.effective_user.username or f'user_{telegram_id}'
 
         user, created = await get_user(telegram_id, username)
 
@@ -127,11 +129,38 @@ async def crypto(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"Error in /crypto command: {e}", exc_info=True)
         await update.message.reply_text("Sorry, an error occurred while fetching crypto data. Please try again later.")
 
+async def stocks(update:Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        logger.info(f'User{update.effective_user_id} requested /stocks')
+        trending = get_stock_trending()
+        if not trending:
+            await update.message.reply_text("No stock data available at the moment. Please try again later.")
+            return
+        text = '\n\n'.join(trending)
+        await update.message.reply_text(text, parse_mode="Markdown")
+    except Exception as e:
+        logger.error(f"Error in /stocks command: {e}", exc_info=True)
+        await update.message.reply_text("Sorry, an error occurred while fetching stock data. Please try again later.")
+
+async def news(update:Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        logger.info(f'User{update.effective_user_id} requested /news')
+        trending = get_news_trending()
+        if not trending:
+            await update.message.reply_text("No news data available at the moment. Please try again later.")
+            return
+        text = '\n\n'.join(trending)
+        await update.message.reply_text(text, parse_mode="Markdown")
+    except Exception as e:
+        logger.error(f"Error in /news command: {e}", exc_info=True)
+        await update.message.reply_text("Sorry, an error occurred while fetching news data. Please try again later.")
+
+
 #Response on command /mytopics
 async def mytopics(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         telegram_id = update.effective_user.id
-        username = update.effective_user.username
+        username = update.effective_user.username or f'user_{telegram_id}'
 
         user, created = await get_user(telegram_id, username)
         

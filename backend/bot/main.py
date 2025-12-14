@@ -15,7 +15,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smart_bot.settings')
 django.setup()
 
 # Import handlers AFTER django.setup() because they use Django models
-from bot.handlers import start, crypto, mytopics, subscribe, unsubscribe
+from bot.handlers import start, crypto, mytopics, subscribe, unsubscribe, stocks, news
 
 def main():
     TOKEN = settings.BOT_TOKEN
@@ -29,6 +29,8 @@ def main():
     app.add_handler(CommandHandler('unsubscribe', unsubscribe))
     app.add_handler(CommandHandler('crypto', crypto))
     app.add_handler(CommandHandler('mytopics', mytopics))
+    app.add_handler(CommandHandler('stocks', stocks))
+    app.add_handler(CommandHandler('news', news))
     
     print("Bot started. Polling...")
     app.run_polling()

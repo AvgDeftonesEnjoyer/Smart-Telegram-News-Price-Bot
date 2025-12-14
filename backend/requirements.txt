@@ -7,3 +7,4 @@ redis==5.0.1
 requests==2.31.0
 celery==5.3.4
 django-celery-beat==2.8.1
+yfinance==0.2.33

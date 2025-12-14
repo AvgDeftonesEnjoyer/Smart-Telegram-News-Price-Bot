@@ -16,6 +16,11 @@ class FeedItem(models.Model):
     source = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['-created_at']),
+        ]
+
     def __str__(self):
         return self.title
 
